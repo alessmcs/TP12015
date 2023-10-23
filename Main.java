@@ -16,12 +16,15 @@ public class Main {
 
         Lettre[] listeVoisins = new Lettre[8];
 
-        listeVoisins = Command.trouverVoisin(1,1);
+        Lettre parent = new Lettre(liste[1][1], 1, 1);
+
+        listeVoisins = Command.trouverVoisin(parent.indexX,parent.indexY);
 
         System.out.println(listeVoisins);
         Arbre arbre = Command.arbre;
 
-        ArrayList<TrieNode> listeEnfants = arbre.trouverDebut(listeVoisins, liste[1][1], Command.arbre.root); // pour l'exemple, utiliser listeVoisins pour le (2,2)
+        // trouver les enfants de la lettre du centre à partir de la racine
+        arbre.trouverDebut(listeVoisins, parent, Command.arbre.root); // pour l'exemple, utiliser listeVoisins pour le (2,2)
 
 //        for (TrieNode n : listeEnfants){
 //            // use the index attributes with the letters!!!

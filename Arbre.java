@@ -4,6 +4,7 @@ import java.util.*;
 public class Arbre {
 
     private String[] listeMots;
+    private Stack<Lettre> listeChemin = new Stack<Lettre>(); // for the coordinates
 
 
     // Tree constructor
@@ -28,46 +29,108 @@ public class Arbre {
     }
 
 
-    // TODO: maybe make it a list of lettre object instead of chars????
     // La méthode trouverDebut nous permet de trouver la première et deuxième lettre des mots qu'on cherche,
     // et créer une liste à partir des voisins du parent, pour qu'on trouve tous les chemins possibles
-    public  ArrayList<TrieNode> trouverDebut(Lettre[] voisins, char parentChar, TrieNode currentNode){
+
+
+    public ArrayList<Lettre> trouverDebut(Lettre[] voisins, Lettre parentChar, TrieNode currentNode){
         TrieNode parent = null;
 
         if ( currentNode == root ){
-            parent = currentNode.children.get(parentChar); // find the first letter in the 1st level of children
+            parent = currentNode.children.get(parentChar.caractere); // find the first letter in the 1st level of children
+            listeChemin.push(parentChar); // add the valid letter to the stack
         } else {
             parent = currentNode;
+            listeChemin.push(parentChar);
         }
-        ArrayList<TrieNode> listeEnfants = new ArrayList<TrieNode>(); // liste pour le chemin des coordonnées
-        ArrayList<int[]> listeChemin = new ArrayList<>(); // liste pour les coordonnées
+        //ArrayList<TrieNode> listeEnfants = new ArrayList<TrieNode>(); // liste pour le chemin des coordonnées
+
+        ArrayList<Lettre> listeEnfants = new ArrayList<Lettre>(); // liste pour le chemin des coordonnées
+
 
         // this loop gives la liste des voisins de la 1re lettre, donc des chemins potentiels pour trouver le mot
         for (TrieNode n : parent.children.values() ){
+
             for ( int i = 0 ; i < voisins.length ; i++){
-                if (n.caractere == voisins[i].caractere) { // check if children of parent contain the character(s) we want
-                    listeEnfants.add(n); // ajouter à la liste des enfants
-                    int[] tabCoords = { voisins[i].indexX, voisins[i].indexY};
-                    listeChemin.add( tabCoords ); // ajouter à la liste des coordonnées
-                    if (n.isWord) System.out.println("Mot trouvé!");
+                if (n.nodeCharacter == voisins[i].caractere) { // check if children of parent contain the character(s) we want
+
+                    listeEnfants.add(voisins[i]); // ajouter à la liste des enfants
+
+                    if (n.isWord){
+                        System.out.println("Mot trouvé!");
+                        listeChemin.push(voisins[i]); // add the last letter to the list
+
+                        System.out.println(cheminToString(listeChemin));
+
+                        // add an iterator that increases every time you add a letter, subtract it from stack.size when
+                        // you return, so that only part of the stack remains and you can start anew
+                    }
+
+
+
+                    // once the word is found return the word & the coords list then pop it for the amount of
+                    // times you've added a letter
+                    // then return everything
                 }
             }
         }
 
         for (int i = 0; i < listeEnfants.size() ; i++){
             // use the index attributes with the letters!!!
-            TrieNode nouvParent = listeEnfants.get(i);
-            Lettre[] nouvVoisins = Command.trouverVoisin(listeChemin.get(i)[0], listeChemin.get(i)[1]);
-            trouverDebut(nouvVoisins, nouvParent.caractere, nouvParent);
-        }
 
-        // now we've found the list of children, which is made of TrieNodes, so we can look at its children and move
-        // down the word recursively & moving along the grid
+            int nouvX = listeEnfants.get(i).indexX;
+            int nouvY = listeEnfants.get(i).indexY;
+
+
+            char caractParent = listeEnfants.get(i).caractere;
+
+            TrieNode nouvParent = parent.children.get(caractParent);
+
+            //Lettre lettreParent = new Lettre(listeEnfants.get(i).nodeCharacter, nouvX, nouvY);
+
+            Lettre lettreParent = listeEnfants.get(i);
+
+            Lettre[] nouvVoisins = Command.trouverVoisin(nouvX, nouvY); // idk about using peek
+
+            trouverDebut(nouvVoisins, lettreParent, nouvParent);
+        }
 
         return listeEnfants;
     }
 
+    public String cheminToString(Stack chemin){
+        Stack stackCopy = chemin;
+        int size = chemin.size();
+        String result = "";
 
+        ArrayList<String> coordList = new ArrayList<String>();
+        ArrayList<String> motList = new ArrayList<String>();
+
+        for (int i = 0; i < size; i++){
+            Lettre element = (Lettre) stackCopy.pop();
+            String string = "( " + element.indexX + " , " + element.indexY + " )";
+            coordList.add(string);
+            motList.add(String.valueOf(element.caractere));
+        }
+
+        // reverse the arrayLists
+        Collections.reverse(coordList);
+        Collections.reverse(motList);
+
+        // build the final string
+        for (int j = 0; j < motList.size(); j++){
+            result += (motList.get(j));
+        }
+        result += " ";
+
+        for (int j = 0; j < motList.size(); j++){
+            if (j != motList.size() - 1) {
+                result += (coordList.get(j) + " -> ");
+            } else { result += coordList.get(j); }
+        }
+
+        return result;
+    }
 
 
     public void searchChildren(TrieNode parent, char[] array, int index){
