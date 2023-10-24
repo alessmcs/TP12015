@@ -6,9 +6,6 @@ public class Arbre {
     private String[] listeMots;
     private Stack<Lettre> listeChemin = new Stack<Lettre>(); // for the coordinates
 
-    private int indexMot = 0;
-
-
     // Tree constructor
     public Arbre(String[] listeMots) {
         this.listeMots = listeMots;
@@ -33,80 +30,79 @@ public class Arbre {
 
     // La méthode trouverDebut nous permet de trouver la première et deuxième lettre des mots qu'on cherche,
     // et créer une liste à partir des voisins du parent, pour qu'on trouve tous les chemins possibles
-
-    //TODO: listeChemin is empty when i exit the first loop
-
-    public ArrayList<Lettre> trouverDebut(Lettre[] voisins, Lettre parentChar, TrieNode currentNode){
+    public int trouverDebut(Lettre[] voisins, Lettre parentChar, TrieNode currentNode){
         TrieNode parent = null;
 
         if ( currentNode == root ){
             parent = currentNode.children.get(parentChar.caractere); // find the first letter in the 1st level of children
             listeChemin.push(parentChar); // add the valid letter to the stack
-            indexMot ++;
+
         } else {
             parent = currentNode;
             listeChemin.push(parentChar);
-            indexMot ++;
         }
-        //ArrayList<TrieNode> listeEnfants = new ArrayList<TrieNode>(); // liste pour le chemin des coordonnées
+
+        int startTaille = listeChemin.size();
 
         ArrayList<Lettre> listeEnfants = new ArrayList<Lettre>(); // liste pour le chemin des coordonnées
 
+        if(currentNode.isWord && currentNode.children.isEmpty() ) {
+            System.out.println("Mot trouvé!");
+            //System.out.println(cheminToString(listeChemin)); //TODO HANDLE CHEMINS TO ORDERED OUTPUT & output duplicates
+            Command.addToList(cheminToString(listeChemin));
+            return listeChemin.size();
+        }
 
         // this loop gives la liste des voisins de la 1re lettre, donc des chemins potentiels pour trouver le mot
         for (TrieNode n : parent.children.values() ){
-
             for ( int i = 0 ; i < voisins.length ; i++){
                 if (n.nodeCharacter == voisins[i].caractere) { // check if children of parent contain the character(s) we want
 
                     listeEnfants.add(voisins[i]); // ajouter à la liste des enfants
 
-                    if (n.isWord && n.children == null){ // if n is a word and is a leaf
+                    if (n.isWord && n.children.isEmpty()){ // if n is a word and is a leaf & there's multiple valid children
+
+
                         System.out.println("Mot trouvé!");
                         listeChemin.push(voisins[i]); // add the last letter to the list
-                        indexMot ++;
-                        System.out.println(cheminToString(listeChemin));
+                        //System.out.println(cheminToString(listeChemin)); //TODO HANDLE CHEMINS TO ORDERED OUTPUT
+                        String out = cheminToString(listeChemin);
+                        Command.addToList(out);
 
-                        for(int j = 0; j<indexMot; j++){
-                            indexMot --;
-                            listeChemin.pop();
-                        }
 
-                        return listeEnfants;
-                        // add an iterator that increases every time you add a letter, subtract it from stack.size when
-                        // you return, so that only part of the stack remains and you can start anew
-                    } else if(n.isWord){
+                        listeChemin.pop();
+
+                    } else if(n.isWord){ // n is a word and has children
                         // TODO
                         System.out.println("Mot trouvé!");
                         listeChemin.push(voisins[i]); // add the last letter to the list
-                        indexMot ++;
-                        System.out.println(cheminToString(listeChemin));
-                        listeChemin.pop() ; indexMot--;
-
+                        //System.out.println(cheminToString(listeChemin));
+                        Command.addToList(cheminToString(listeChemin));
+                        listeChemin.pop() ;
                         // no return , look for the rest of the word
                     }
 
-
-                    // once the word is found return the word & the coords list then pop it for the amount of
-                    // times you've added a letter
-                    // then return everything
                 }
-
             }
         }
 
-        if (listeEnfants.size() == 0){
-            // TODO
-            // check when you pushed the Lettre object to ListeEnfants
-            System.out.println("Mot trouvé!");
-            this.listeChemin.pop(); // add the last letter to the list
-            indexMot --;
-            System.out.println(cheminToString(listeChemin));
+//        int actualSize = listeChemin.size() - startTaille;
+//        if (actualSize == 0) return listeChemin.size();
+//        for (int i = 0; i < actualSize; i++ ){
+//            listeChemin.pop();
+//        }
 
-            for(int i = 0; i <indexMot; i++){
-                indexMot --;
-                listeChemin.pop();
-            }
+        if (listeEnfants.size() == 0){
+
+            System.out.println("Mot introuvable pour ce chemin");
+            this.listeChemin.pop(); // remove the last letter we just added
+            return listeChemin.size(); // return now
+
+//            for(int i = 0; i <indexMot; i++){
+//                indexMot --;
+//                listeChemin.pop();
+//            }
+
         }
 
         for (int i = 0; i < listeEnfants.size() ; i++){
@@ -114,6 +110,7 @@ public class Arbre {
             int nouvX = listeEnfants.get(i).indexX;
             int nouvY = listeEnfants.get(i).indexY;
 
+            int currentTaille = listeChemin.size();
 
             char caractParent = listeEnfants.get(i).caractere;
 
@@ -123,10 +120,18 @@ public class Arbre {
 
             Lettre[] nouvVoisins = Command.trouverVoisin(nouvX, nouvY);
 
-            trouverDebut(nouvVoisins, lettreParent, nouvParent);
+            int nouvCheminTaille = trouverDebut(nouvVoisins, lettreParent, nouvParent);
+
+            int difference = nouvCheminTaille - currentTaille;
+
+            // delete the letters you added, go back in the chemin????
+            for (int j= 0; j < difference ; j++){
+                listeChemin.pop();
+            }
+
         }
 
-        return listeEnfants;
+        return listeChemin.size();
     }
 
     // TODO: make a method to update stack
@@ -162,7 +167,7 @@ public class Arbre {
             } else { result += coordList.get(j); }
         }
 
-        return result;
+        return result + "\n";
     }
 
 

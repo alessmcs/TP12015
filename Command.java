@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Command {
 
@@ -85,7 +87,10 @@ public class Command {
 
         for (int pos = 0; pos < directions.length; pos++) {
             int i = posI + directions[pos][0];
+            if ( i > listeGrille.length - 1) i = -1;
             int j = posJ + directions[pos][1];
+            if ( j > listeGrille[0].length - 1) j = -1;
+
 
             if (i >= 0 && i <= liste.length && j >= 0 && j <= liste[0].length) { // changé >= 1 à >= 0 & char à Lettre
                 // voisins[pos] = liste[i][j];
@@ -115,6 +120,19 @@ public class Command {
     public static void parcourirArbre(char[] listeVoisins, Arbre arbre){
 
 
+    }
+
+    private static ArrayList<String> listeCoords = new ArrayList<>();
+
+    public static void addToList(String string){
+        listeCoords.add(string);
+    }
+
+    public static List buildOutput(){
+        List<String> uniqueCoords = listeCoords.stream()
+                .distinct()
+                .collect(Collectors.toList());
+        return uniqueCoords;
     }
 
 
