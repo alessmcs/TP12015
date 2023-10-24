@@ -6,6 +6,8 @@ public class Arbre {
     private String[] listeMots;
     private Stack<Lettre> listeChemin = new Stack<Lettre>(); // for the coordinates
 
+    private int indexMot = 0;
+
 
     // Tree constructor
     public Arbre(String[] listeMots) {
@@ -32,6 +34,7 @@ public class Arbre {
     // La méthode trouverDebut nous permet de trouver la première et deuxième lettre des mots qu'on cherche,
     // et créer une liste à partir des voisins du parent, pour qu'on trouve tous les chemins possibles
 
+    //TODO: listeChemin is empty when i exit the first loop
 
     public ArrayList<Lettre> trouverDebut(Lettre[] voisins, Lettre parentChar, TrieNode currentNode){
         TrieNode parent = null;
@@ -39,9 +42,11 @@ public class Arbre {
         if ( currentNode == root ){
             parent = currentNode.children.get(parentChar.caractere); // find the first letter in the 1st level of children
             listeChemin.push(parentChar); // add the valid letter to the stack
+            indexMot ++;
         } else {
             parent = currentNode;
             listeChemin.push(parentChar);
+            indexMot ++;
         }
         //ArrayList<TrieNode> listeEnfants = new ArrayList<TrieNode>(); // liste pour le chemin des coordonnées
 
@@ -56,27 +61,55 @@ public class Arbre {
 
                     listeEnfants.add(voisins[i]); // ajouter à la liste des enfants
 
-                    if (n.isWord){
+                    if (n.isWord && n.children == null){ // if n is a word and is a leaf
                         System.out.println("Mot trouvé!");
                         listeChemin.push(voisins[i]); // add the last letter to the list
-
+                        indexMot ++;
                         System.out.println(cheminToString(listeChemin));
 
+                        for(int j = 0; j<indexMot; j++){
+                            indexMot --;
+                            listeChemin.pop();
+                        }
+
+                        return listeEnfants;
                         // add an iterator that increases every time you add a letter, subtract it from stack.size when
                         // you return, so that only part of the stack remains and you can start anew
-                    }
+                    } else if(n.isWord){
+                        // TODO
+                        System.out.println("Mot trouvé!");
+                        listeChemin.push(voisins[i]); // add the last letter to the list
+                        indexMot ++;
+                        System.out.println(cheminToString(listeChemin));
+                        listeChemin.pop() ; indexMot--;
 
+                        // no return , look for the rest of the word
+                    }
 
 
                     // once the word is found return the word & the coords list then pop it for the amount of
                     // times you've added a letter
                     // then return everything
                 }
+
+            }
+        }
+
+        if (listeEnfants.size() == 0){
+            // TODO
+            // check when you pushed the Lettre object to ListeEnfants
+            System.out.println("Mot trouvé!");
+            this.listeChemin.pop(); // add the last letter to the list
+            indexMot --;
+            System.out.println(cheminToString(listeChemin));
+
+            for(int i = 0; i <indexMot; i++){
+                indexMot --;
+                listeChemin.pop();
             }
         }
 
         for (int i = 0; i < listeEnfants.size() ; i++){
-            // use the index attributes with the letters!!!
 
             int nouvX = listeEnfants.get(i).indexX;
             int nouvY = listeEnfants.get(i).indexY;
@@ -86,11 +119,9 @@ public class Arbre {
 
             TrieNode nouvParent = parent.children.get(caractParent);
 
-            //Lettre lettreParent = new Lettre(listeEnfants.get(i).nodeCharacter, nouvX, nouvY);
-
             Lettre lettreParent = listeEnfants.get(i);
 
-            Lettre[] nouvVoisins = Command.trouverVoisin(nouvX, nouvY); // idk about using peek
+            Lettre[] nouvVoisins = Command.trouverVoisin(nouvX, nouvY);
 
             trouverDebut(nouvVoisins, lettreParent, nouvParent);
         }
@@ -98,8 +129,10 @@ public class Arbre {
         return listeEnfants;
     }
 
+    // TODO: make a method to update stack
+
     public String cheminToString(Stack chemin){
-        Stack stackCopy = chemin;
+        Stack stackCopy = (Stack) chemin.clone();
         int size = chemin.size();
         String result = "";
 
@@ -168,6 +201,6 @@ public class Arbre {
     }
 
 
-    // TODO: find a way to return the word we found
+
 
 }
