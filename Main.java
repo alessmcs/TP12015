@@ -1,11 +1,12 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 public class Main {
     public static <E> void main(String[] args) {
 
-        String path = "TP1Input";
+        String path = "TP1Input2";
 
         // lire le fichier & créer les listes de problèmes dans FileReader
         FileReader fr = new FileReader(path);

@@ -60,9 +60,9 @@ public class Arbre {
             for ( int i = 0 ; i < voisins.length ; i++){
 
                 if (n.nodeCharacter == parentChar.caractere){ // double lettre dans le mot
-                    listeEnfants.add(parentChar);
+                    if(!listeEnfants.contains(parentChar) ) listeEnfants.add(parentChar);
                 }
-                else if (n.nodeCharacter == voisins[i].caractere) {
+                if (n.nodeCharacter == voisins[i].caractere) {
                     listeEnfants.add(voisins[i]);
 
                     if (n.isWord && n.children.isEmpty()){ // si n.isWord = true et n est une feuille
