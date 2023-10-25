@@ -32,9 +32,11 @@ public class Arbre {
     // et créer une liste à partir des voisins du parent, pour qu'on trouve tous les chemins possibles
     public int trouverDebut(Lettre[] voisins, Lettre parentChar, TrieNode currentNode){
         TrieNode parent = null;
+        TrieNode rootChild = root.children.get(parentChar.caractere);
 
-        if ( currentNode == root ){
-            parent = currentNode.children.get(parentChar.caractere); // find the first letter in the 1st level of children
+        if (rootChild == currentNode){
+            parent = currentNode; // find the first letter in the 1st level of children
+            listeChemin.clear();
             listeChemin.push(parentChar); // add the valid letter to the stack
 
         } else {
@@ -47,7 +49,6 @@ public class Arbre {
         ArrayList<Lettre> listeEnfants = new ArrayList<Lettre>(); // liste pour le chemin des coordonnées
 
         if(currentNode.isWord && currentNode.children.isEmpty() ) {
-            System.out.println("Mot trouvé!");
             Command.addToList(cheminToString(listeChemin));
             return listeChemin.size();
         }
@@ -55,23 +56,20 @@ public class Arbre {
         // this loop gives la liste des voisins de la 1re lettre, donc des chemins potentiels pour trouver le mot
         for (TrieNode n : parent.children.values() ){
             for ( int i = 0 ; i < voisins.length ; i++){
-                if (n.nodeCharacter == voisins[i].caractere) { // check if children of parent contain the character(s) we want
 
+                if (n.nodeCharacter == parentChar.caractere){ // double letter
+                    listeEnfants.add(parentChar);
+                }
+                else if (n.nodeCharacter == voisins[i].caractere) { // check if children of parent contain the character(s) we want
                     listeEnfants.add(voisins[i]); // ajouter à la liste des enfants
 
                     if (n.isWord && n.children.isEmpty()){ // if n is a word and is a leaf & there's multiple valid children
-
-
-                        System.out.println("Mot trouvé!");
                         listeChemin.push(voisins[i]); // add the last letter to the list
                         String out = cheminToString(listeChemin);
                         Command.addToList(out);
-
-
                         listeChemin.pop();
 
                     } else if(n.isWord){ // n is a word and has children
-                        System.out.println("Mot trouvé!");
                         listeChemin.push(voisins[i]); // add the last letter to the list
                         Command.addToList(cheminToString(listeChemin));
                         listeChemin.pop() ;
@@ -83,7 +81,6 @@ public class Arbre {
 
         if (listeEnfants.size() == 0){
 
-            System.out.println("Mot introuvable pour ce chemin");
             this.listeChemin.pop(); // remove the last letter we just added
             return listeChemin.size(); // return now
         }
@@ -148,7 +145,7 @@ public class Arbre {
             } else { result += coordList.get(j); }
         }
 
-        return result + "\n";
+        return result;
     }
 
 
