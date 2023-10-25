@@ -1,9 +1,4 @@
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 
 import java.util.*;
@@ -14,21 +9,29 @@ import java.util.stream.Collectors;
 public class Command {
 
     public static Arbre arbre;
-    private static ArrayList<String[]> listesMots = new ArrayList<>();
-    private static ArrayList<Grille> grilles = new ArrayList<>();
+    public static Grille grille;
+    public static ArrayList<String[]> listesMots = new ArrayList<>();
+    public static ArrayList<Grille> grilles = new ArrayList<>();
 
     private static char[][] listeGrille;
 
-    public static void setListeMots(String[] mots){
-        listesMots.add(mots);
-    }
-
-    public static void setGrilles(Grille grille){
-        grilles.add(grille);
-    }
+//    public void setListeMots(String[] mots){
+//        listesMots.add(mots);
+//    }
+//
+//    public void setGrilles(Grille grille){
+//        grilles.add(grille);
+//    }
 
 
     // itérer à travers les listes pour traverser le fichier txt
+//    public static void construireArbre(){
+//        arbre = new Arbre(listesMots.get(1));
+//    }
+
+//    public static void construireGrille(){
+//        grille = grilles.get(1);
+//    }
 
 
     public static char[][]listLettre(Grille grille) {
@@ -99,5 +102,19 @@ public class Command {
         }
         
         return lettreInit;
+    }
+
+    // Créer le output
+    private static ArrayList<String> listeCoords = new ArrayList<>();
+
+    public static void addToList(String string){
+        listeCoords.add(string);
+    }
+
+    public static List buildOutput(){
+        List<String> uniqueCoords = listeCoords.stream()
+                .distinct()
+                .collect(Collectors.toList());
+        return uniqueCoords;
     }
 }

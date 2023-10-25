@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 
 public class FileReader {
 
@@ -12,10 +9,8 @@ public class FileReader {
         this.fileName = fileName;
     }
 
-    public Grille readFile(){
+    public void readFile(){
         String fileName = this.fileName;
-        Grille grille = new Grille();
-
         try {
 
             int problemIndex = 0;
@@ -25,10 +20,12 @@ public class FileReader {
 
             while( (line = br.readLine()) != null) {
 
+                Grille grille = new Grille();
+
                 // 1re ligne indique les dimensions de la grille
                 String[] dimension = line.split(" ");
-                int colonne = Integer.parseInt(dimension[0]);
-                int ligne = Integer.parseInt(dimension[1]);
+                int ligne = Integer.parseInt(dimension[0]);
+                int colonne = Integer.parseInt(dimension[1]);
                 String[][] lignesGrille = new String[ligne][colonne];
 
                 // identifier les lignes de la grille & faire un tableau 2d
@@ -43,11 +40,11 @@ public class FileReader {
                 grille.setLigne(ligne);
                 grille.setGrille(lignesGrille);
 
-                Command.setGrilles(grille);
+                Command.grilles.add(problemIndex, grille);
 
                 // enfin, la dernière ligne indique la liste de mots à chercher dans la grille
                 line = br.readLine();
-                Command.setListeMots(line.split(" "));
+                Command.listesMots.add(line.split(" "));
 
                 problemIndex ++;
             }
@@ -58,7 +55,5 @@ public class FileReader {
             File file = new File(fileName);
             out.println("Absolute path:" + file.getAbsolutePath());
         }
-
-        return grille;
     }
 }
