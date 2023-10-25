@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.*;
+
 
 public class Command {
 
@@ -91,7 +93,7 @@ public class Command {
                 // voisins[pos] = liste[i][j];
                 voisins[pos] = new Lettre( liste[i][j], i, j);
             } else {
-                voisins[pos] = new Lettre (' ', ' ', ' ');
+                voisins[pos] = new Lettre (' ', -1,  -1 );
             }
         }
         return voisins;
@@ -112,10 +114,32 @@ public class Command {
     }
 
 
-    public static void parcourirArbre(char[] listeVoisins, Arbre arbre){
+    public static ArrayList<TrieNode> sortEnfantRoot(Arbre arbre){
+        ArrayList<TrieNode> listEnfant = new ArrayList<>();
+        for( TrieNode node : arbre.root.children.values()){
+            listEnfant.add(node);
+        }
 
-
+        Collections.sort(listEnfant, (a, b) -> Character.compare(a.nodeCharacter, b.nodeCharacter));
+        return listEnfant;
     }
 
 
+    public static ArrayList<Lettre> parcourirGrille(char[][] grille, TrieNode node){
+
+        ArrayList<Lettre> lettreInit =  new ArrayList<>();
+
+        for(int i = 0; i < grille.length;i++) {
+
+            for (int j = 0; j < grille[i].length; j++) {
+
+                if (node.nodeCharacter == grille[i][j]) {
+                    Lettre uneLettre = new Lettre(node.nodeCharacter, i, j);
+                    lettreInit.add(uneLettre);
+                }
+            }
+        }
+        System.out.println(lettreInit);
+        return lettreInit;
+    }
 }

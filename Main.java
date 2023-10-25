@@ -10,21 +10,28 @@ public class Main {
         String path = "TP1Input";
 
         Grille grille = Command.readFile(path);
-        System.out.println(grille.getColonne());
+        //System.out.println(grille.getColonne());
 
         char[][] liste = Command.listLettre(grille);
 
         Lettre[] listeVoisins = new Lettre[8];
 
-        Lettre parent = new Lettre(liste[1][1], 1, 1);
+        //Lettre parent = new Lettre(liste[2][1], 2, 1);
 
-        listeVoisins = Command.trouverVoisin(parent.indexX,parent.indexY);
+        //System.out.println(Arrays.toString(Command.trouverVoisin(2, 2)));
 
-        System.out.println(listeVoisins);
+        //System.out.println(listeVoisins);
         Arbre arbre = Command.arbre;
 
+        for (TrieNode node : Command.sortEnfantRoot(arbre)) {
+            Command.parcourirGrille(liste,node);
+            
+        }
+
+        //listeVoisins = Command.trouverVoisin(init.getIndexX(),init.getIndexY());
+
         // trouver les enfants de la lettre du centre à partir de la racine
-        arbre.trouverDebut(listeVoisins, parent, Command.arbre.root); // pour l'exemple, utiliser listeVoisins pour le (2,2)
+        //arbre.trouverDebut(listeVoisins, init, Command.arbre.root); // pour l'exemple, utiliser listeVoisins pour le (2,2)
 
 //        for (TrieNode n : listeEnfants){
 //            // use the index attributes with the letters!!!
@@ -39,9 +46,9 @@ public class Main {
 
         char a = Command.lettreGrille(liste)[0].getCaractere();
 
-        System.out.println(a);
+        //System.out.println(a);
 
-        System.out.println(Arrays.deepToString(liste));
+        //System.out.println(Arrays.deepToString(liste));
 
 
 
