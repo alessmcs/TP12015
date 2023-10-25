@@ -9,6 +9,9 @@ public class FileReader {
         this.fileName = fileName;
     }
 
+    /* La méthode readFile lit le fichier txt fourni et, en utilisant les valeurs lues par le BufferedReader,
+       construit les grilles & les listes de mots qu'on utilisera dans Command pour trouver les mots
+    * */
     public void readFile(){
         String fileName = this.fileName;
         try {

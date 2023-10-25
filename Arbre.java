@@ -13,7 +13,8 @@ public class Arbre {
     }
     protected final TrieNode root = new TrieNode(' '); // root of the Trie ; empty node
 
-    // Code du Trie basé sur les notes de cours
+    // Construire un Trie
+    // Méthode "insert" par François Major (2023), dans les notes du cours IFT2015
     public void insert( String word ) {
         // insert a word in the Trie
         TrieNode node = root; // take the root
@@ -27,64 +28,65 @@ public class Arbre {
 
     }
 
-
-    // La méthode trouverDebut nous permet de trouver la première et deuxième lettre des mots qu'on cherche,
-    // et créer une liste à partir des voisins du parent, pour qu'on trouve tous les chemins possibles
-    public int trouverDebut(Lettre[] voisins, Lettre parentChar, TrieNode currentNode){
+    /*
+        La méthode trouverDebut nous permet de trouver, dans la grille, les enfants d'une lettre "parent" à
+        partir de la liste des voisins du parent.
+        Elle construit une liste des voisins "valides", et itère ensuite à travers celle-ci pour traverser la
+        grille et l'arbre récursivement.
+     */
+    public int trouverProchain(Lettre[] voisins, Lettre parentChar, TrieNode currentNode){
         TrieNode parent = null;
         TrieNode rootChild = root.children.get(parentChar.caractere);
 
-        if (rootChild == currentNode){
-            parent = currentNode; // find the first letter in the 1st level of children
+        if (rootChild == currentNode){ // Si le noeud courant est un enfant direct de la racine
+            parent = currentNode;
             listeChemin.clear();
-            listeChemin.push(parentChar); // add the valid letter to the stack
+            listeChemin.push(parentChar);
 
         } else {
             parent = currentNode;
             listeChemin.push(parentChar);
         }
 
-        int startTaille = listeChemin.size();
-
-        ArrayList<Lettre> listeEnfants = new ArrayList<Lettre>(); // liste pour le chemin des coordonnées
+        ArrayList<Lettre> listeEnfants = new ArrayList<Lettre>(); // nouvelle liste pour le chemin des coordonnées
 
         if(currentNode.isWord && currentNode.children.isEmpty() ) {
             Command.addToList(cheminToString(listeChemin));
             return listeChemin.size();
         }
 
-        // this loop gives la liste des voisins de la 1re lettre, donc des chemins potentiels pour trouver le mot
+        // Cette boucle permet de trouver tous les chemins potentiels à prendre à partir de la letre parent
         for (TrieNode n : parent.children.values() ){
             for ( int i = 0 ; i < voisins.length ; i++){
 
-                if (n.nodeCharacter == parentChar.caractere){ // double letter
+                if (n.nodeCharacter == parentChar.caractere){ // double lettre dans le mot
                     listeEnfants.add(parentChar);
                 }
-                else if (n.nodeCharacter == voisins[i].caractere) { // check if children of parent contain the character(s) we want
-                    listeEnfants.add(voisins[i]); // ajouter à la liste des enfants
+                else if (n.nodeCharacter == voisins[i].caractere) {
+                    listeEnfants.add(voisins[i]);
 
-                    if (n.isWord && n.children.isEmpty()){ // if n is a word and is a leaf & there's multiple valid children
-                        listeChemin.push(voisins[i]); // add the last letter to the list
+                    if (n.isWord && n.children.isEmpty()){ // si n.isWord = true et n est une feuille
+                        listeChemin.push(voisins[i]);
                         String out = cheminToString(listeChemin);
                         Command.addToList(out);
                         listeChemin.pop();
 
-                    } else if(n.isWord){ // n is a word and has children
-                        listeChemin.push(voisins[i]); // add the last letter to the list
+                    } else if(n.isWord){ // n.isWord = true mais il reste des enfants, donc il faut continuer à descendre
+                        listeChemin.push(voisins[i]);
                         Command.addToList(cheminToString(listeChemin));
                         listeChemin.pop() ;
-                        // no return , look for the rest of the word
+                        // aucun retour, chercher le reste du mot
                     }
                 }
             }
         }
 
-        if (listeEnfants.size() == 0){
-
-            this.listeChemin.pop(); // remove the last letter we just added
-            return listeChemin.size(); // return now
+        if (listeEnfants.size() == 0){ // aucun enfant valide, mot introuvable pour ce chemin
+            this.listeChemin.pop();
+            return listeChemin.size();
         }
 
+        // construire l'appel récursif pour chaque enfant valide
         for (int i = 0; i < listeEnfants.size() ; i++){
 
             int nouvX = listeEnfants.get(i).indexX;
@@ -100,11 +102,11 @@ public class Arbre {
 
             Lettre[] nouvVoisins = Command.trouverVoisin(nouvX, nouvY);
 
-            int nouvCheminTaille = trouverDebut(nouvVoisins, lettreParent, nouvParent);
+            int nouvCheminTaille = trouverProchain(nouvVoisins, lettreParent, nouvParent);
 
             int difference = nouvCheminTaille - currentTaille;
 
-            // delete the letters you added, go back in the chemin????
+            // réduire le stack pour pouvoir ajouter un chemin alternatif à la prochaine itération
             for (int j= 0; j < difference ; j++){
                 listeChemin.pop();
             }
@@ -112,6 +114,7 @@ public class Arbre {
         return listeChemin.size();
     }
 
+    // Cette méthode transforme le stack du chemin en un String formatté correctement pour la sortie du programme
     public String cheminToString(Stack chemin){
         Stack stackCopy = (Stack) chemin.clone();
         int size = chemin.size();
@@ -127,11 +130,9 @@ public class Arbre {
             motList.add(String.valueOf(element.caractere));
         }
 
-        // reverse the arrayLists
         Collections.reverse(coordList);
         Collections.reverse(motList);
 
-        // build the final string
         for (int j = 0; j < motList.size(); j++){
             result += (motList.get(j));
         }
@@ -145,10 +146,5 @@ public class Arbre {
 
         return result;
     }
-
-
-
-
-
 
 }

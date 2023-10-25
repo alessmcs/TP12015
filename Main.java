@@ -5,33 +5,41 @@ import java.util.Collections;
 public class Main {
     public static <E> void main(String[] args) {
 
-        String path = "TP1Input2";
+        String path = "TP1Input";
 
-        // lire le fichier
+        // lire le fichier & créer les listes de problèmes dans FileReader
         FileReader fr = new FileReader(path);
         fr.readFile();
 
-        Grille grille = Command.grilles.get(0);
-        Arbre arbre = new Arbre(Command.listesMots.get(0));
+        for (int i = 0; i < Command.grilles.size(); i++){
 
-        char[][] liste = Command.listLettre(grille);
+            // Réinitialiser le chemin, la grille et la liste de mots à chaque itération
+            Command.listeCoords = new ArrayList<>();
+            Grille grille = new Grille();
+            grille = Command.grilles.get(i);
+
+            String[] listeMots = Command.listesMots.get(i);
+            Arbre arbre = new Arbre(listeMots);
+
+            char[][] liste = Command.listLettre(grille);
 
 
-        for (TrieNode node : Command.sortEnfantRoot(arbre)) {
+            for (TrieNode node : Command.sortEnfantRoot(arbre)) {
 
-            for (Lettre lettre : Command.parcourirGrille(liste,node)){
+                for (Lettre lettre : Command.parcourirGrille(liste,node)){
 
-                Lettre[] voisins = Command.trouverVoisin(lettre.getIndexX(), lettre.getIndexY());
-                arbre.trouverDebut(voisins,lettre, node);
+                    Lettre[] voisins = Command.trouverVoisin(lettre.getIndexX(), lettre.getIndexY());
+                    arbre.trouverProchain(voisins,lettre, node);
+
+                }
 
             }
 
+            System.out.println("\n Problème " + (i+1) + " : ");
+            for(Object s : Command.buildOutput()){
+                System.out.println(s);
+            }
         }
-
-        for(Object s : Command.buildOutput()){
-            System.out.println(s);
-        }
-
     }
 
 }

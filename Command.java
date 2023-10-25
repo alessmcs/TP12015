@@ -86,14 +86,12 @@ public class Command {
         return lettreInit;
     }
 
-    // Créer le output
-    private static ArrayList<String> listeCoords = new ArrayList<>();
+    // Préparer la sortie finale du programme
+    public static ArrayList<String> listeCoords = new ArrayList<>();
 
     public static void addToList(String string){
         listeCoords.add(string);
     }
-
-
 
     public static List buildOutput(){
         Collections.sort(listeCoords);
@@ -102,4 +100,5 @@ public class Command {
                 .collect(Collectors.toList());
         return uniqueCoords;
     }
+
 }
