@@ -4,35 +4,17 @@ import java.util.ArrayList;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Collections;
 
 
 public class Command {
 
-    public static Arbre arbre;
-    public static Grille grille;
+    private static Arbre arbre;
+    private static Grille grille;
     public static ArrayList<String[]> listesMots = new ArrayList<>();
     public static ArrayList<Grille> grilles = new ArrayList<>();
 
     private static char[][] listeGrille;
-
-//    public void setListeMots(String[] mots){
-//        listesMots.add(mots);
-//    }
-//
-//    public void setGrilles(Grille grille){
-//        grilles.add(grille);
-//    }
-
-
-    // itérer à travers les listes pour traverser le fichier txt
-//    public static void construireArbre(){
-//        arbre = new Arbre(listesMots.get(1));
-//    }
-
-//    public static void construireGrille(){
-//        grille = grilles.get(1);
-//    }
-
 
     public static char[][]listLettre(Grille grille) {
         char[][] listChar = new char[grille.getLigne()][grille.getColonne()];
@@ -111,7 +93,10 @@ public class Command {
         listeCoords.add(string);
     }
 
+
+
     public static List buildOutput(){
+        Collections.sort(listeCoords);
         List<String> uniqueCoords = listeCoords.stream()
                 .distinct()
                 .collect(Collectors.toList());

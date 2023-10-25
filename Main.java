@@ -1,18 +1,15 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class Main {
     public static <E> void main(String[] args) {
 
         String path = "TP1Input2";
 
-
         // lire le fichier
         FileReader fr = new FileReader(path);
         fr.readFile();
-
-        ArrayList<Grille> grilles = Command.grilles;
-        ArrayList<String[]> listesMots = Command.listesMots;
 
         Grille grille = Command.grilles.get(0);
         Arbre arbre = new Arbre(Command.listesMots.get(0));
@@ -34,7 +31,6 @@ public class Main {
         for(Object s : Command.buildOutput()){
             System.out.println(s);
         }
-        //System.out.println(Command.buildOutput());
 
     }
 

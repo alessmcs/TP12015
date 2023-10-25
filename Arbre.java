@@ -112,8 +112,6 @@ public class Arbre {
         return listeChemin.size();
     }
 
-    // TODO: make a method to update stack
-
     public String cheminToString(Stack chemin){
         Stack stackCopy = (Stack) chemin.clone();
         int size = chemin.size();
