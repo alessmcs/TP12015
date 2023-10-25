@@ -11,57 +11,21 @@ import java.util.stream.Collectors;
 public class Command {
 
     public static Arbre arbre;
-    private static String[] listeMots;
+    private static ArrayList<String[]> listesMots = new ArrayList<>();
+    private static ArrayList<Grille> grilles = new ArrayList<>();
 
     private static char[][] listeGrille;
 
-    public static Grille readFile(String fileName){
-
-        Grille grille = new Grille();
-
-        try {
-            FileReader fileReader = new FileReader(fileName);
-            BufferedReader br = new BufferedReader(fileReader);
-            String line = br.readLine();
-
-            // 1re ligne indique les dimensions de la grille
-            String[] dimension = line.split(" ");
-            int colonne = Integer.parseInt(dimension[0]);
-            int ligne = Integer.parseInt(dimension[1]);
-            String[][] lignesGrille = new String[ligne][colonne];
-
-            // identifier les lignes de la grille & faire un tableau 2d
-            for (int i = 0 ; i < colonne; i++) {
-                line = br.readLine();
-                String[] uneLigne = line.split(" ");
-                lignesGrille[i] = uneLigne;
-            }
-
-            // Créer un nouvel objet grille contenant les dimensions et la grille
-            grille.setColonne(colonne);
-            grille.setLigne(ligne);
-            grille.setGrille(lignesGrille);
-
-            // enfin, la dernière ligne indique la liste de mots à chercher dans la grille
-            line = br.readLine();
-
-            listeMots = line.split(" ");
-            arbre = new Arbre(listeMots);
-
-
-            br.close();
-
-
-        } catch (IOException e) {
-            System.err.println("Error reading file: " + e.getMessage());
-            PrintStream out = System.out;
-            File file = new File(fileName);
-            out.println("Absolute path:" + file.getAbsolutePath());
-        }
-
-        return grille;
-
+    public static void setListeMots(String[] mots){
+        listesMots.add(mots);
     }
+
+    public static void setGrilles(Grille grille){
+        grilles.add(grille);
+    }
+
+
+    // itérer à travers les listes pour traverser le fichier txt
 
 
     public static char[][]listLettre(Grille grille) {
