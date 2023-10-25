@@ -5,7 +5,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+
 import java.util.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class Command {
@@ -84,20 +87,22 @@ public class Command {
 
             int[][] directions = {{-1, 0}, {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}};
 
+
             for (int pos = 0; pos < directions.length; pos++) {
                 int i = posI + directions[pos][0];
                 int j = posJ + directions[pos][1];
+
 
                 if (i >= 0 && i < liste.length && j >= 0 && j < liste[i].length) { // changé >= 1 à >= 0 & char à Lettre
                     // voisins[pos] = liste[i][j];
                     voisins[pos] = new Lettre( liste[i][j], i, j);
                 } else {
                     voisins[pos] = new Lettre (' ', -1,  -1 );
-                    //voisins[pos] = null;
+                   
                 }
             }
             return voisins;
-         //char[]  voisins = new char[8];
+         
     }
 
 
@@ -118,7 +123,9 @@ public class Command {
 
         for(int i = 0; i < grille.length;i++) {
 
+
             for (int j = 0; j < grille[i].length; j++) {
+
 
                 if (node.nodeCharacter == grille[i][j]) {
                     Lettre uneLettre = new Lettre(node.nodeCharacter, i, j);
@@ -126,7 +133,7 @@ public class Command {
                 }
             }
         }
-        //System.out.println(lettreInit);
+        
         return lettreInit;
     }
 }
