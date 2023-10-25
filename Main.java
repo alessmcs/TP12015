@@ -1,18 +1,19 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 
-// TODO:  lire le fichier txt pour identifier la grille
-// TODO: si un mot est le préfixe d'un autre, pas besoin de refaire la recherche
-// TODO: arbre pour la liste de mots pour eviter de refaire la recherche
 public class Main {
     public static void main(String[] args) {
 
         String path = "TP1Input";
 
         Grille grille = Command.readFile(path);
-        System.out.println(grille.getColonne());
 
         char[][] liste = Command.listLettre(grille);
+
+
+        Arbre arbre = Command.arbre;
+
+        for (TrieNode node : Command.sortEnfantRoot(arbre)) {
 
         Lettre[] listeVoisins = new Lettre[8];
 
@@ -43,13 +44,17 @@ public class Main {
         // Command.parcourirArbre(listeVoisins, arbre);
 
 
-        char a = Command.lettreGrille(liste)[0].getCaractere();
 
-        System.out.println(a);
+            for (Lettre lettre : Command.parcourirGrille(liste,node)){
 
-        System.out.println(Arrays.deepToString(liste));
+                Lettre[] voisins = Command.trouverVoisin(lettre.getIndexX(), lettre.getIndexY());
+                //System.out.println(Arrays.toString(voisins));
 
+                arbre.trouverDebut(voisins,lettre, node);
 
+            }
+
+        }
 
     }
 
