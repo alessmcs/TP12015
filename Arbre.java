@@ -48,7 +48,6 @@ public class Arbre {
 
         if(currentNode.isWord && currentNode.children.isEmpty() ) {
             System.out.println("Mot trouvé!");
-            //System.out.println(cheminToString(listeChemin)); //TODO HANDLE CHEMINS TO ORDERED OUTPUT & output duplicates
             Command.addToList(cheminToString(listeChemin));
             return listeChemin.size();
         }
@@ -65,7 +64,6 @@ public class Arbre {
 
                         System.out.println("Mot trouvé!");
                         listeChemin.push(voisins[i]); // add the last letter to the list
-                        //System.out.println(cheminToString(listeChemin)); //TODO HANDLE CHEMINS TO ORDERED OUTPUT
                         String out = cheminToString(listeChemin);
                         Command.addToList(out);
 
@@ -73,36 +71,21 @@ public class Arbre {
                         listeChemin.pop();
 
                     } else if(n.isWord){ // n is a word and has children
-                        // TODO
                         System.out.println("Mot trouvé!");
                         listeChemin.push(voisins[i]); // add the last letter to the list
-                        //System.out.println(cheminToString(listeChemin));
                         Command.addToList(cheminToString(listeChemin));
                         listeChemin.pop() ;
                         // no return , look for the rest of the word
                     }
-
                 }
             }
         }
-
-//        int actualSize = listeChemin.size() - startTaille;
-//        if (actualSize == 0) return listeChemin.size();
-//        for (int i = 0; i < actualSize; i++ ){
-//            listeChemin.pop();
-//        }
 
         if (listeEnfants.size() == 0){
 
             System.out.println("Mot introuvable pour ce chemin");
             this.listeChemin.pop(); // remove the last letter we just added
             return listeChemin.size(); // return now
-
-//            for(int i = 0; i <indexMot; i++){
-//                indexMot --;
-//                listeChemin.pop();
-//            }
-
         }
 
         for (int i = 0; i < listeEnfants.size() ; i++){
@@ -128,9 +111,7 @@ public class Arbre {
             for (int j= 0; j < difference ; j++){
                 listeChemin.pop();
             }
-
         }
-
         return listeChemin.size();
     }
 
@@ -171,39 +152,6 @@ public class Arbre {
     }
 
 
-    public void searchChildren(TrieNode parent, char[] array, int index){
-        // TrieNode currentNode = parent;
-        // ArrayList to add elements for the word (indexes from the 2d grid)
-        // make a pointer for the branch & recursive call there when you're back
-        //TODO: throw exceptions
-        TrieNode childNode = null;
-        TrieNode branchNode = parent; // pointer ; temp value for index so I can return to it when i go back up the branch
-
-        ArrayList<int[]> chemin = new ArrayList<>(); // maybe mets à l'extérieur
-        char character = array[index];
-
-        if(parent.children != null) childNode = parent.children.get(character); // if it's not null keep moving down the branch
-
-        if (childNode != null && childNode.isWord == false){
-            // if not null, recursive call until isWord or null (so only part of the word is in the array not the whole thing)
-            // childNode becomes parent, array stays the same but index advances
-            searchChildren(childNode,array,++index);
-
-        } else if (childNode != null && childNode.isWord == true){
-            System.out.println("Word found!");
-            // when the word is found, return to the base of the branch and check the array for an earlier index
-            // if it's the end of the branch, go back to the parent and check for other children
-            if(childNode.children == null) searchChildren(branchNode,array,++index);
-            // if it's not the end of the branch & the word is found, keep advancing until the next word
-            if(childNode.children != null) searchChildren(childNode,array,++index);
-
-        } else if (childNode==null){
-            searchChildren(parent, array, ++index);
-        } else {
-            System.out.println("No word in sub-grid");
-        }
-
-    }
 
 
 

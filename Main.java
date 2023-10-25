@@ -2,13 +2,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Main {
-    public static void main(String[] args) {
+    public static <E> void main(String[] args) {
 
         String path = "TP1Input";
 
+
+        // lire le fichier
+        FileReader fr = new FileReader(path);
+        fr.readFile();
+
         Grille grille = Command.readFile(path);
 
-        char[][] liste = Command.listLettre(grille);
+
 
 
         Arbre arbre = Command.arbre;
@@ -22,6 +27,7 @@ public class Main {
                 //System.out.println(Arrays.toString(voisins));
 
                 arbre.trouverDebut(voisins,lettre, node);
+
 
             }
 
