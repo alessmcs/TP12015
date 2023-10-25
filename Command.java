@@ -77,40 +77,27 @@ public class Command {
     }
 
 
-    public static Lettre[] trouverVoisin(int posI, int posJ) {
-        //char[]  voisins = new char[8];
+    public static Lettre[] trouverVoisin(int posI, int posJ)  {
 
-        char[][] liste = listeGrille; // utiliser la liste locale de Command
-        Lettre[] voisins = new Lettre[8]; // (make a list of lettre objects)
+            char[][] liste = listeGrille; // utiliser la liste locale de Command
+            Lettre[] voisins = new Lettre[8]; // (make a list of lettre objects)
 
-        int[][] directions = {{-1, 0}, {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}};
+            int[][] directions = {{-1, 0}, {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}};
 
-        for (int pos = 0; pos < directions.length; pos++) {
-            int i = posI + directions[pos][0];
-            int j = posJ + directions[pos][1];
+            for (int pos = 0; pos < directions.length; pos++) {
+                int i = posI + directions[pos][0];
+                int j = posJ + directions[pos][1];
 
-            if (i >= 0 && i <= liste.length && j >= 0 && j <= liste[0].length) { // changé >= 1 à >= 0 & char à Lettre
-                // voisins[pos] = liste[i][j];
-                voisins[pos] = new Lettre( liste[i][j], i, j);
-            } else {
-                voisins[pos] = new Lettre (' ', -1,  -1 );
+                if (i >= 0 && i < liste.length && j >= 0 && j < liste[i].length) { // changé >= 1 à >= 0 & char à Lettre
+                    // voisins[pos] = liste[i][j];
+                    voisins[pos] = new Lettre( liste[i][j], i, j);
+                } else {
+                    voisins[pos] = new Lettre (' ', -1,  -1 );
+                    //voisins[pos] = null;
+                }
             }
-        }
-        return voisins;
-    }
-
-    public static Lettre[] lettreGrille(char[][] liste){
-        ArrayList<Lettre> listeLettre = new ArrayList<>();
-
-        for(int i = 0; i < liste.length;i++){
-            for(int j = 0; j < liste[i].length; j++) {
-                Lettre uneLettre = new Lettre(liste[i][j],i,j);
-                listeLettre.add(uneLettre);
-            }
-        }
-        Lettre[] resultat = listeLettre.toArray(new Lettre[0]);
-
-        return resultat;
+            return voisins;
+         //char[]  voisins = new char[8];
     }
 
 
@@ -139,7 +126,7 @@ public class Command {
                 }
             }
         }
-        System.out.println(lettreInit);
+        //System.out.println(lettreInit);
         return lettreInit;
     }
 }
