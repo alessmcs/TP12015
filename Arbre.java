@@ -113,8 +113,9 @@ public class Arbre {
         return listeChemin.size();
     }
 
-    // La méthode cheminToString transforme le Stack du chemin (de lettre) en un
-    //  String formaté correctement pour la sortie du programme
+    /*
+     La méthode cheminToString transforme le Stack du chemin (de lettre) en un
+     */
     public String cheminToString(Stack chemin){
         Stack stackCopy = (Stack) chemin.clone();
         int size = chemin.size();

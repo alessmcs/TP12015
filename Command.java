@@ -105,8 +105,10 @@ public class Command {
         listeCoords.add(string);
     }
 
-    // La méthode trie la sortie de chaque mot, en fonction des coordonnées
-    // de la première lettre. Elle renvoie la liste de la sortie pour chaque mot.
+    /*
+     La méthode buildOutput() trie la sortie de chaque mot, en fonction des coordonnées
+     de la première lettre. Elle renvoie la liste de la sortie pour chaque mot.
+     */
     public static List buildOutput(){
         Collections.sort(listeCoords);
         return listeCoords.stream()

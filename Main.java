@@ -6,7 +6,8 @@ import java.util.ArrayList;
 public class Main {
     public static <E> void main(String[] args) {
 
-        String path = "TP1Input";
+
+        String path = args[0];
 
         // lire le fichier & créer les listes de problèmes dans FileReader
         FileReader fr = new FileReader(path);
@@ -41,7 +42,7 @@ public class Main {
 
             }
 
-            System.out.println("\n Problème " + (i+1) + " : ");
+            System.out.println("\nProblème " + (i+1) + " : ");
             for(Object s : Command.buildOutput()){
                 System.out.println(s);
             }
