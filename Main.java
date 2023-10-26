@@ -1,12 +1,12 @@
+// ------------------------- auteur, HAYS Océane 20240742, MANCAS Alessandra 20249098 -------------------------------
+
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+
 
 public class Main {
     public static <E> void main(String[] args) {
 
-        String path = "TP1Input2";
+        String path = "TP1Input";
 
         // lire le fichier & créer les listes de problèmes dans FileReader
         FileReader fr = new FileReader(path);
@@ -16,7 +16,8 @@ public class Main {
 
             // Réinitialiser le chemin, la grille et la liste de mots à chaque itération
             Command.listeCoords = new ArrayList<>();
-            Grille grille = new Grille();
+            new Grille();
+            Grille grille;
             grille = Command.grilles.get(i);
 
             String[] listeMots = Command.listesMots.get(i);
@@ -24,7 +25,11 @@ public class Main {
 
             char[][] liste = Command.listLettre(grille);
 
-
+            /*
+                On parcourt les nœuds enfants de la racine de l'arbre, on effectue une instance de Lettre.
+                 On récupère dans une liste les voisins de chacune de ses lettres. Finalement, on cherche
+                 dans cette nouvelle liste l'existence d'une prochaine lettre associer au mot cherché.
+             */
             for (TrieNode node : Command.sortEnfantRoot(arbre)) {
 
                 for (Lettre lettre : Command.parcourirGrille(liste,node)){

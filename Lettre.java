@@ -1,3 +1,10 @@
+// ------------------------- auteur, HAYS Océane 20240742, MANCAS Alessandra 20249098 -------------------------------
+
+/*
+    La classe Lettre définit un constructeur d'Objet Lettre contenant les informations
+    relatives à une Lettre, son caractère (valeur) et sa position x, y dans la grille ainsi
+    que des méthodes d'accès.
+ */
 public class Lettre {
     char caractere;
     int indexX;
@@ -8,9 +15,6 @@ public class Lettre {
         this.indexY = indexY;
     }
 
-    public char getCaractere(){
-        return caractere;
-    }
 
     public int getIndexX(){
         return indexX;
